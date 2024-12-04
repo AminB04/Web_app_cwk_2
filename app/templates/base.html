@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Kit Store{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1><a href="{{ url_for('home') }}">Kit Store</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('current_kits') }}">Current Kits</a></li>
+                <li><a href="{{ url_for('retro_kits') }}">Retro Kits</a></li>
+                <li><a href="{{ url_for('concept_kits') }}">Concept Kits</a></li>
+                <li><a href="{{ url_for('favourites') }}">Favourites</a></li>
+                <li style="float:right"><a href="{{ url_for('basket') }}">Basket</a></li>
+                {% if current_user.is_authenticated %}
+                    <li style="float:right"><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li style="float:right"><a href="{{ url_for('login') }}">Login</a></li>
+                    <li style="float:right"><a href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <main>
+        {% block content %}
+        <!-- Content for individual pages -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2024 Kit Store</p>
+    </footer>
+</body>
+</html>

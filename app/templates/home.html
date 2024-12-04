@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main>
+    <div class="welcome-message">
+        <h2>Welcome to the Kit Store!</h2>
+    </div>
+</main>
+<div class="image-grid">
+    <div onclick="window.location.href='{{ url_for('current_kits') }}'">
+        <img src="{{ url_for('static', filename='current_kits.jpg') }}" alt="Current Kits">
+        <div class="image-caption">Current Kits</div>
+    </div>
+    <div onclick="window.location.href='{{ url_for('retro_kits') }}'">
+        <img src="{{ url_for('static', filename='retro_kits.jpg') }}" alt="Retro Kits">
+        <div class="image-caption">Retro Kits</div>
+    </div>
+    <div onclick="window.location.href='{{ url_for('concept_kits') }}'">
+        <img src="{{ url_for('static', filename='concept_kits.jpg') }}" alt="Concept Kits">
+        <div class="image-caption">Concept Kits</div>
+    </div>
+</div>
+{% endblock %}

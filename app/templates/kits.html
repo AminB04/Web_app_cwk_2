@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Welcome to the {{ title }}!</h2>
+    
+    <div class="image-grid">
+        {% for kit in kits %}
+            <div class="card {{ 'disabled-card' if kit.stock_level == 0 else '' }}">
+                <img src="{{ url_for('static', filename='images/' + kit.image_filename) }}" alt="{{ kit.name }}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">{{ kit.name }}</h5>
+                    <p>Stock available: {{ kit.stock_level }}</p>
+
+                    <!-- Dropdown for size selection, disabled if out of stock -->
+                    <label for="size-{{ kit.id }}">Select Size:</label>
+                    <select id="size-{{ kit.id }}" class="form-control" {{ 'disabled' if kit.stock_level == 0 }}>
+                        <option value="S">Small</option>
+                        <option value="M">Medium</option>
+                        <option value="L">Large</option>
+                        <option value="XL">Extra Large</option>
+                    </select>
+                    
+                    <!-- Add to Favourites Button, disabled if out of stock -->
+                    <form action="{{ url_for('add_to_favourites', kit_id=kit.id) }}" method="POST">
+                        <button type="submit" class="btn btn-primary mt-2" {{ 'disabled' if kit.stock_level == 0 }}>Add to Favourites</button>
+                    </form>
+                    
+                    <!-- Add to Basket Button, disabled if out of stock -->
+                    <form action="{{ url_for('add_to_basket', kit_id=kit.id) }}" method="POST">
+                        <button type="submit" class="btn btn-success mt-2" {{ 'disabled' if kit.stock_level == 0 }}>Add to Basket</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if kits|length == 0 %}
+        <p>No kits found!</p>
+    {% endif %}
+{% endblock %}
