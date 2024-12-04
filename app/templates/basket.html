@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Basket</h2>
+    {% if basket_items %}
+    <div class="card-grid">
+        {% for kit in basket_items %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/' + kit.image_filename) }}" alt="{{ kit.name }}" class="card-img">
+            <div class="card-content">
+                <h3>{{ kit.name }}</h3>
+                <p class="price">${{ kit.price }}</p>
+                <form action="{{ url_for('remove_from_basket', kit_id=kit.id) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Remove from Basket</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Your basket is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}

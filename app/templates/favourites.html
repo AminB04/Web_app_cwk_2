@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Favourite Kits</h2>
+    <div id="favourites-container">
+        {% if favourites %}
+        <div class="card-grid">
+            {% for kit in favourites %}
+            <div class="card" id="favourite-{{ kit.id }}">
+                <img src="{{ url_for('static', filename='images/' + kit.image_filename) }}" alt="{{ kit.name }}" class="card-img">
+                <div class="card-content">
+                    <h3>{{ kit.name }}</h3>
+                    <p class="price">${{ kit.price }}</p>
+                    <button class="btn btn-danger remove-favourite" data-kit-id="{{ kit.id }}">Remove from Favourites</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p id="no-favourites-message">No favourites added yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.remove-favourite').click(function() {
+            var kitId = $(this).data('kit-id');
+            $.ajax({
+                url: '/remove_from_favourites/' + kitId,
+                type: 'POST',
+                success: function(response) {
+                    if (response.success) {
+                        $('#favourite-' + kitId).remove();
+                        displayMessage(response.message, "success");
+                        if ($('.card').length === 0) {
+                            $('#favourites-container').html('<p id="no-favourites-message">No favourites added yet.</p>');
+                        }
+                    } else {
+                        displayMessage(response.message, "danger");
+                    }
+                },
+                error: function(xhr) {
+                    var response = JSON.parse(xhr.responseText);
+                    displayMessage(response.message, "danger");
+                }
+            });
+        });
+
+        function displayMessage(message, category) {
+            var alert = $('<div class="alert alert-' + category + '">' + message + '</div>');
+            $('.flash-messages').append(alert);
+        }
+    });
+</script>
+{% endblock %}
